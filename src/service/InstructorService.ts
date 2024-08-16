@@ -56,10 +56,13 @@ export class InstructorService implements IInstructorService{
           };
 
           const instructor = await this.instructorRepository.register(userData);
+          // if(instructor){
+          //   const updateRole = await this.userRepository.changeRole(userId);
+          //   const result = Buffer.from(JSON.stringify(updateRole));
+          //   return result;
+          // }
           if(instructor){
-            const updateRole = await this.userRepository.changeRole(userId);
-            const result = Buffer.from(JSON.stringify(updateRole));
-            return result;
+            return instructor;
           }
           else{
             return "error adding instructor";
