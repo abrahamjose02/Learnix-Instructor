@@ -1,14 +1,13 @@
 import { IInstructorRepository } from "../interface/IInstructorRepository";
 import { IInstructorService } from "../interface/IInstructorService";
 import { S3Params } from "../interface/IServiceInterface";
-import { IUserRepository } from "../interface/IUserRepository";
 import { Instructor } from "../model/instructor.entities";
 import {s3} from '../config/s3Config';
 import crypto from 'crypto';
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 export class InstructorService implements IInstructorService{
-    constructor(private instructorRepository:IInstructorRepository,private userRepository:IUserRepository){}
+    constructor(private instructorRepository:IInstructorRepository){}
 
      async userRegister(data: Instructor) {
         const {
@@ -18,8 +17,8 @@ export class InstructorService implements IInstructorService{
             yearOfCompletion,
             institution,
             subject,
-            certificationDate,
-            certificationName,
+            certificateDate,
+            certificateName,
             fieldName,
             mimeType,
           } = data;
@@ -36,8 +35,15 @@ export class InstructorService implements IInstructorService{
             ContentType:mimeType
           }
 
-          const command = new PutObjectCommand(params)
-          await s3.send(command)
+          try {
+            const command = new PutObjectCommand(params);
+            await s3.send(command);
+            console.log("File uploaded successfully.");
+          } catch (error) {
+            console.error("Error uploading file to S3:", error);
+            throw new Error("S3 upload failed");
+          }
+      
 
           const url = `https://instructor-data-bucket.s3.ap-south-1.amazonaws.com/${imageName}`
 
@@ -48,24 +54,25 @@ export class InstructorService implements IInstructorService{
             yearOfCompletion,
             institution,
             subject,
-            certificationDate,
-            certificationName,
+            certificateDate,
+            certificateName,
             fieldName,
             mimeType,
             certificate:url
           };
 
+          console.log(userData);
+
+          
           const instructor = await this.instructorRepository.register(userData);
-          // if(instructor){
-          //   const updateRole = await this.userRepository.changeRole(userId);
-          //   const result = Buffer.from(JSON.stringify(updateRole));
-          //   return result;
-          // }
-          if(instructor){
-            return instructor;
-          }
-          else{
-            return "error adding instructor";
-          }
-    }
+    if (instructor) {
+      
+      return instructor;
+    } else {
+      return "error adding instructor";
+  }
+ }
+ async getInstructorByUserId(userId:string):Promise<Instructor | null>{
+  return await this.instructorRepository.findByUserId(userId)
+ }
 }

@@ -1,18 +1,17 @@
-
-export class Instructor{
+export class Instructor {
     constructor(
-        public readonly userId:string,
-        public readonly degree:string,
-        public readonly institution:string,
-        public readonly subject:string,
-        public readonly yearOfCompletion:string,
-        public readonly certificationName:string,
-        public readonly certificationDate:Date,
-        public readonly fieldName:string,
-        public readonly mimeType:string,
-        public readonly createdCourses?:Array<{courseId:string}>,
-        public readonly certificate?:string,
-        public readonly verified?:string,
-        public buffer?:{data:Buffer},
-    ){}
-}
+      public readonly userId: string,
+      public readonly degree: string,
+      public readonly institution: string,
+      public readonly subject: string,
+      public readonly yearOfCompletion: string,
+      public readonly certificateName: string,
+      public readonly certificateDate: Date,
+      public readonly fieldName: string,
+      public readonly mimeType: string,
+      public readonly createdCourses?: Array<{ courseId: string }>,
+      public readonly certificate?: string,
+      public readonly verified?: boolean,
+      public buffer?: { data: Buffer }
+    ) {}
+  }

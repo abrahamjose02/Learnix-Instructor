@@ -12,4 +12,18 @@ export class InstructorController{
             console.log(e)
         }
     }
+
+    getInstructorByUserId = async(id:string) =>{
+        try {
+            const instructor = await this.service.getInstructorByUserId(id);
+            if(instructor){
+                return {success:true,instructor}
+            }else{
+                return {success:false,message:"Instructor not found"}
+            }
+        } catch (e:any) {
+            console.log(e)
+            return { success: false, error: e.message };
+        }
+    }
 }

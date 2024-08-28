@@ -8,4 +8,7 @@ export class InstructorRepostiory implements IInstructorRepository{
     async register(data: Instructor) {
         return  await InstructorModel.create(data)
     }
+    async findByUserId(userId:string):Promise<Instructor | null>{
+        return await InstructorModel.findOne({userId}).exec()
+    }
 }
